@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "812516216149",
+    "project_id": "my-to-do-list-c8f9a",
+    "storage_bucket": "my-to-do-list-c8f9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812516216149:android:d1980492fd1d6507dfb3dc",
+        "android_client_info": {
+          "package_name": "com.wahyus.todolistfirestore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzP54fKqwJkIxDdjpS31GkdPjeSsxvAhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
