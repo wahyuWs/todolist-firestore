@@ -55,9 +55,16 @@ class MainActivity : AppCompatActivity(), TodolistAdapter.ItemCallback, Todolist
             .get()
             .addOnSuccessListener { result ->
                 for (data in result.documents) {
-                    val note = data.toObject<Note>()
-                    Log.d("Note", note.toString())
-                    notes.add(note!!)
+                    val item = data.toObject<Note>()
+                    if(item != null) {
+                        val note = Note(
+                            data.id,
+                            item.title,
+                            item.description,
+                            item.datetime
+                        )
+                        notes.add(note)
+                    }
                 }
                 todolistAdapter.setData(notes)
             }
@@ -71,10 +78,27 @@ class MainActivity : AppCompatActivity(), TodolistAdapter.ItemCallback, Todolist
         view = layoutInflater.inflate(R.layout.insert_layout, null)
         dialog.apply {
             setContentView(view)
-            setCancelable(true)
+            setCancelable(false)
             window?.setBackgroundDrawableResource(android.R.color.transparent)
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
+    }
+
+    private fun showNote(data: Note) {
+        val editextTitle = view.findViewById<EditText>(R.id.edt_title)
+        val editextDescription = view.findViewById<EditText>(R.id.edt_description)
+        val btnClose = view.findViewById<Button>(R.id.btn_close)
+        val btnSave = view.findViewById<Button>(R.id.btn_save)
+
+        btnSave.visibility = View.INVISIBLE
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+            editextTitle.text.clear()
+            editextDescription.text.clear()
+        }
+
+        editextTitle.setText(data.title)
+        editextDescription.setText(data.description)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -82,7 +106,9 @@ class MainActivity : AppCompatActivity(), TodolistAdapter.ItemCallback, Todolist
         val editextTitle = view.findViewById<EditText>(R.id.edt_title)
         val editextDescription = view.findViewById<EditText>(R.id.edt_description)
         val btnSave = view.findViewById<Button>(R.id.btn_save)
+        val btnClose = view.findViewById<Button>(R.id.btn_close)
 
+        btnSave.visibility = View.VISIBLE
         btnSave.setOnClickListener {
             val title = editextTitle.text.toString()
             val description = editextDescription.text.toString()
@@ -105,13 +131,24 @@ class MainActivity : AppCompatActivity(), TodolistAdapter.ItemCallback, Todolist
                     Toast.makeText(this, "Erorr ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+    }
+
+    private fun deleteNote(id: String) {
+        db.collection("notes").document(id)
+            .delete()
+            .addOnSuccessListener { Toast.makeText(this, "deleted successfully", Toast.LENGTH_SHORT).show() }
+            .addOnFailureListener { e -> Toast.makeText(this, e.message, Toast.LENGTH_LONG).show() }
     }
 
     override fun onClick(note: Note) {
-        TODO("Not yet implemented")
+        showNote(note)
+        dialog.show()
     }
 
-    override fun onRemove(note: Note) {
-        TODO("Not yet implemented")
+    override fun onRemove(id: String) {
+        deleteNote(id)
     }
 }

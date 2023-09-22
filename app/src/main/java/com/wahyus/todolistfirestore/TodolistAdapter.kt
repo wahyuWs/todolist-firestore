@@ -22,7 +22,7 @@ class TodolistAdapter(private val itemCallback: ItemCallback, private val itemRe
             }
 
             itemBinding.ibDelete.setOnClickListener {
-                itemRemove.onRemove(note)
+                itemRemove.onRemove(note.id)
             }
 
             itemView.setOnClickListener {
@@ -47,6 +47,6 @@ class TodolistAdapter(private val itemCallback: ItemCallback, private val itemRe
     }
 
     interface ItemRemove {
-        fun onRemove(note: Note)
+        fun onRemove(id: String)
     }
 }
